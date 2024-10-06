@@ -7,6 +7,7 @@ import RegistrationScreen from "./pages/registration_screen/registration_screen"
 import LoginScreen from "./pages/login_screen/login_screen";
 import ValidationScreen from "./pages/validation_screen/validation_screen";
 import BioScreen from "./pages/bio_screen/bio_screen";
+import ProfileScreen from "./pages/profile_screen/profile_screen";
 
 const Stack = createNativeStackNavigator();
 
@@ -23,9 +24,10 @@ export default function App() {
       {fontsLoaded && (
         <>
           <Stack.Navigator
-            initialRouteName="RegistrationScreen"
+            initialRouteName="LoginScreen"
             screenOptions={{ headerShown: false }}
           >
+            <Stack.Screen name="LoginScreen" component={LoginScreen} />
             <Stack.Screen
               name="RegistrationScreen"
               component={RegistrationScreen}
@@ -35,6 +37,7 @@ export default function App() {
               component={ValidationScreen}
             />
             <Stack.Screen name="BioScreen" component={BioScreen} />
+            <Stack.Screen name="ProfileScreen" component={ProfileScreen} />
           </Stack.Navigator>
         </>
       )}

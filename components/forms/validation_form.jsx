@@ -41,11 +41,9 @@ const ValidationForm = () => {
   let verificationCode = "";
   const handleSubmit = (values) => {
     verificationCode = code[0].join("");
-    console.log(`Код подтверждения: ${verificationCode}`);
 
     // navigation.navigate("BioScreen");
   };
-  console.log(verificationCode);
   useEffect(() => {
     let interval;
     if (code[2]) {

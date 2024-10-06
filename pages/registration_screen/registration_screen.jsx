@@ -12,10 +12,11 @@ import { SvgXml } from "react-native-svg";
 import { arrowBack, background, bg2 } from "../../images/images";
 import RegistrationForm from "../../components/forms/registration_form";
 import { useEffect, useRef, useState } from "react";
+import { useNavigation } from "@react-navigation/native";
 
 const RegistrationScreen = () => {
+  const navigation = useNavigation();
   const windowWidth = Dimensions.get("window").width;
-  const windowHeight = Dimensions.get("window").height;
 
   const [isKeyboardVisible, setKeyboardVisible] = useState(false);
 
@@ -73,7 +74,12 @@ const RegistrationScreen = () => {
 
       <View style={styles.header}>
         <View style={styles.headView}>
-          <TouchableOpacity style={styles.loginButton}>
+          <TouchableOpacity
+            style={styles.loginButton}
+            onPress={() => {
+              navigation.navigate("LoginScreen");
+            }}
+          >
             <SvgXml xml={arrowBack} />
             <Text style={styles.loginText}>Войти</Text>
           </TouchableOpacity>

@@ -1,23 +1,96 @@
 import {
-  SafeAreaView,
   ScrollView,
   Text,
   StyleSheet,
   Dimensions,
+  View,
+  TouchableOpacity,
+  Keyboard,
+  Animated,
 } from "react-native";
 import { SvgXml } from "react-native-svg";
-import { background } from "../../images/images";
+import { arrowBack, background, bg2, bg5 } from "../../images/images";
+import { useEffect, useRef, useState } from "react";
+import LoginForm from "../../components/forms/login_form";
+import { useNavigation } from "@react-navigation/native";
 
 const LoginScreen = () => {
+  const navigation = useNavigation();
   const windowWidth = Dimensions.get("window").width;
-  const windowHeight = Dimensions.get("window").height;
+
+  const [isKeyboardVisible, setKeyboardVisible] = useState(false);
+
+  useEffect(() => {
+    const keyboardDidShowListener = Keyboard.addListener(
+      "keyboardDidShow",
+      () => {
+        setKeyboardVisible(true);
+      }
+    );
+    const keyboardDidHideListener = Keyboard.addListener(
+      "keyboardDidHide",
+      () => {
+        setKeyboardVisible(false);
+      }
+    );
+    return () => {
+      keyboardDidHideListener.remove();
+      keyboardDidShowListener.remove();
+    };
+  }, []);
+
+  const fadeAnim = useRef(new Animated.Value(1)).current;
+
+  const fadeIn = () => {
+    Animated.timing(fadeAnim, {
+      toValue: 1,
+      duration: 500,
+      useNativeDriver: true,
+    }).start();
+  };
+
+  const fadeOut = () => {
+    Animated.timing(fadeAnim, {
+      toValue: 0,
+      duration: 500,
+      useNativeDriver: true,
+    }).start();
+  };
+
   return (
     <ScrollView
       automaticallyAdjustKeyboardInsets={true}
       style={styles.container}
     >
-      <SvgXml xml={background} width={windowWidth} style={styles.backgound} />
-      <Text>Hello</Text>
+      {isKeyboardVisible ? fadeOut() : fadeIn()}
+      <Animated.View style={{ opacity: fadeAnim, zIndex: 2 }}>
+        <SvgXml xml={bg5} width={windowWidth} style={styles.backgound} />
+      </Animated.View>
+      <SvgXml
+        xml={bg2}
+        width={windowWidth}
+        style={{ zIndex: 1, position: "absolute" }}
+      />
+
+      <View style={styles.header}>
+        <View style={styles.headView}>
+          <Text style={styles.registrationText}>Вход</Text>
+          <TouchableOpacity
+            style={styles.loginButton}
+            onPress={() => {
+              navigation.navigate("RegistrationScreen");
+            }}
+          >
+            <Text style={styles.loginText}>Регистрация</Text>
+          </TouchableOpacity>
+        </View>
+        <Text style={styles.hintText}>
+          Введите свой {"\n"}мобильный телефон
+        </Text>
+      </View>
+      <View style={styles.formView}>
+        <LoginForm />
+      </View>
     </ScrollView>
   );
 };
@@ -32,7 +105,46 @@ const styles = StyleSheet.create({
     position: "absolute",
     top: 0,
     left: 0,
-    zIndex: 1,
+    zIndex: 2,
+  },
+  header: {
+    paddingHorizontal: 24,
+    zIndex: 3,
+    marginTop: 40,
+  },
+  headView: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+  loginButton: {
+    flexDirection: "row",
+    backgroundColor: "rgba(232, 240, 249, 1)",
+    height: 48,
+    paddingHorizontal: 20,
+    borderRadius: 26,
+    justifyContent: "center",
+    alignItems: "center",
+    gap: 13,
+  },
+  loginText: {
+    fontFamily: "RalewaySemiBold",
+    color: "rgba(19, 174, 165, 1)",
+  },
+  registrationText: {
+    color: "rgba(255, 255, 255, 1)",
+    fontFamily: "RalewayBold",
+    fontSize: 28,
+  },
+  hintText: {
+    fontFamily: "RalewayMedium",
+    fontSize: 26,
+    color: "white",
+    marginTop: 24,
+  },
+  formView: {
+    marginTop: 186,
+    paddingHorizontal: 24,
   },
 });
 

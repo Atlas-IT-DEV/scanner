@@ -24,7 +24,7 @@ const phoneValidationSchema = Yup.object().shape({
     .max(15, "Номер слишком длинный")
     .required("Введите номер телефона"),
 });
-const RegistrationForm = () => {
+const LoginForm = () => {
   const navigation = useNavigation();
   const [state, setState] = useState([false, "+"]);
 
@@ -136,4 +136,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default RegistrationForm;
+export default LoginForm;
