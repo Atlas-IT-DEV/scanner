@@ -10,10 +10,12 @@ import {
 import { SvgXml } from "react-native-svg";
 import { avatar, bg4, copyIcon, logoutIcon } from "../../images/images";
 import EditModal from "../../components/modals/edit_modal";
+import { useNavigation } from "@react-navigation/native";
 
 const ProfileScreen = ({ name_profile = "Имя Фамилия" }) => {
   const windowWidth = Dimensions.get("window").width;
   console.log(windowWidth);
+  const navigation = useNavigation()
   return (
     <ScrollView
       automaticallyAdjustKeyboardInsets={true}
@@ -74,7 +76,7 @@ const ProfileScreen = ({ name_profile = "Имя Фамилия" }) => {
       </View>
       <View style={styles.buttonsView}>
         <EditModal />
-        <TouchableOpacity style={styles.buttonLogout}>
+        <TouchableOpacity style={styles.buttonLogout} onPress={() => navigation.navigate("LoginScreen")}>
           <SvgXml xml={logoutIcon} />
           <Text style={styles.logOutText}>Выйти</Text>
         </TouchableOpacity>

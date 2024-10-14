@@ -7,10 +7,11 @@ import {
   TouchableOpacity,
   Modal,
   Image,
+  Alert,
 } from "react-native";
 import { SvgXml } from "react-native-svg";
 import { arrowBack, avatar, bg3 } from "../../images/images";
-import { launchImageLibrary, launchCamera } from "react-native-image-picker";
+import * as ImagePicker from "expo-image-picker";
 import { useState } from "react";
 import BioForm from "../../components/forms/bio_form";
 
@@ -20,37 +21,42 @@ const BioScreen = () => {
   const [photo, setPhoto] = useState(avatar); // Состояние для хранения выбранного изображения
   const [modalVisible, setModalVisible] = useState(false);
 
-  const selectPhotoFromLibrary = () => {
-    const options = {
-      mediaType: "photo", // Только фото
-      quality: 1,
-    };
+  const selectPhotoFromLibrary = async () => {
+    // Проверяем разрешение на доступ к библиотеке изображений
+    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    if (status !== "granted") {
+      Alert.alert("Разрешение на доступ", "Разрешите доступ к библиотеке изображений.");
+      return;
+    }
 
-    launchImageLibrary(options, (response) => {
-      if (response.didCancel) {
-      } else if (response.errorCode) {
-      } else {
-        const selectedPhoto = response.assets[0];
-        setPhoto(selectedPhoto.uri);
-      }
+    // Открываем библиотеку изображений
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      quality: 1,
     });
+
+    if (!result.canceled) {
+      setPhoto(result.assets[0].uri);
+    }
   };
-  const takePhotoWithCamera = () => {
-    const options = {
-      mediaType: "photo",
-      quality: 1,
-    };
 
-    launchCamera(options, (response) => {
-      if (response.didCancel) {
-        console.log("Пользователь отменил выбор изображения");
-      } else if (response.errorCode) {
-        Alert.alert("Ошибка камеры:", response.errorMessage);
-      } else {
-        const capturedPhoto = response.assets[0];
-        setPhoto(capturedPhoto.uri);
-      }
+  const takePhotoWithCamera = async () => {
+    // Проверяем разрешение на доступ к камере
+    const { status } = await ImagePicker.requestCameraPermissionsAsync();
+    if (status !== "granted") {
+      Alert.alert("Разрешение на камеру", "Разрешите доступ к камере.");
+      return;
+    }
+
+    // Открываем камеру
+    const result = await ImagePicker.launchCameraAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      quality: 1,
     });
+
+    if (!result.canceled) {
+      setPhoto(result.assets[0].uri);
+    }
   };
 
   return (
@@ -74,7 +80,6 @@ const BioScreen = () => {
         </View>
         <TouchableOpacity
           style={{
-            // backgroundColor: "red",
             width: 128,
             height: 128,
             marginTop: 22,
@@ -83,7 +88,7 @@ const BioScreen = () => {
           }}
           onPress={() => setModalVisible(true)}
         >
-          {photo && <SvgXml xml={photo} />}
+          {photo ? <Image source={{ uri: photo }} style={{ width: 128, height: 128, borderRadius: 64 }} /> : null}
         </TouchableOpacity>
       </View>
       <View style={styles.formView}>

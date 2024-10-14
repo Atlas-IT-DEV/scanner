@@ -12,8 +12,7 @@ import { SvgXml } from "react-native-svg";
 import * as Yup from "yup";
 import {
   clockIcon,
-  continueButtonActive,
-  continueButtonInactive,
+  arrow
 } from "../../images/images";
 
 const verificationSchema = Yup.object().shape({
@@ -121,13 +120,40 @@ const ValidationForm = () => {
             style={styles.continueButton}
             onPress={() => navigation.navigate("BioScreen")}
           >
-            <SvgXml
-              xml={
-                verificationCode.length < 4
-                  ? continueButtonActive
-                  : continueButtonInactive
-              }
-            />
+            {verificationCode.length > 4 ? (
+                <View
+                  style={{
+                    width: 54,
+                    height: 54,
+                    borderRadius: 27,
+                    backgroundColor: "#129189",
+                    display: "flex",
+                    flexDirection: "row",
+                    alignContent: "center",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    opacity:0.4
+                  }}
+                >
+                  <SvgXml xml={arrow} />
+                </View>
+              ) : (
+                <View
+                  style={{
+                    width: 54,
+                    height: 54,
+                    borderRadius: 27,
+                    backgroundColor: "#129189",
+                    display: "flex",
+                    flexDirection: "row",
+                    alignContent: "center",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  <SvgXml xml={arrow} />
+                </View>
+              )}
           </TouchableOpacity>
         </View>
       )}

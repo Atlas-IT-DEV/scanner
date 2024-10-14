@@ -9,8 +9,7 @@ import { Formik } from "formik";
 import * as Yup from "yup";
 import { SvgXml } from "react-native-svg";
 import {
-  continueButtonActive,
-  continueButtonInactive,
+  arrow,
   userIcon,
 } from "../../images/images";
 import { useNavigation } from "@react-navigation/native";
@@ -58,13 +57,40 @@ const BioForm = () => {
             onPress={handleSubmit}
             style={{ marginTop: 22, alignItems: "flex-end" }}
           >
-            <SvgXml
-              xml={
-                errors.nameProfile
-                  ? continueButtonInactive
-                  : continueButtonActive
-              }
-            />
+            {errors.nameProfile ? (
+              <View
+                style={{
+                  width: 54,
+                  height: 54,
+                  borderRadius: 27,
+                  backgroundColor: "#129189",
+                  display: "flex",
+                  flexDirection: "row",
+                  alignContent: "center",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  opacity: 0.4,
+                }}
+              >
+                <SvgXml xml={arrow} />
+              </View>
+            ) : (
+              <View
+                style={{
+                  width: 54,
+                  height: 54,
+                  borderRadius: 27,
+                  backgroundColor: "#129189",
+                  display: "flex",
+                  flexDirection: "row",
+                  alignContent: "center",
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                <SvgXml xml={arrow} />
+              </View>
+            )}
           </TouchableOpacity>
         </>
       )}

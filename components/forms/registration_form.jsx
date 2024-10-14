@@ -78,7 +78,7 @@ const RegistrationForm = () => {
                 setState(copyState);
               }}
             >
-              <SvgXml xml={state[0] ? rememberActive : rememberInactive} />
+              {/* <SvgXml xml={state[0] ? rememberActive : rememberInactive} /> */}
               <Text style={styles.rememberButtonText}>Запомнить меня</Text>
             </TouchableOpacity>
 
@@ -86,13 +86,13 @@ const RegistrationForm = () => {
               disabled={errors.phoneNumber ? true : false}
               onPress={handleSubmit}
             >
-              <SvgXml
+              {/* <SvgXml
                 xml={
                   errors.phoneNumber
                     ? continueButtonInactive
                     : continueButtonActive
                 }
-              />
+              /> */}
             </TouchableOpacity>
           </View>
         </>
