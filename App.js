@@ -8,6 +8,7 @@ import LoginScreen from "./pages/login_screen/login_screen";
 import ValidationScreen from "./pages/validation_screen/validation_screen";
 import BioScreen from "./pages/bio_screen/bio_screen";
 import ProfileScreen from "./pages/profile_screen/profile_screen";
+import ScannerScreen from "./pages/scanner_screen/scanner_screen";
 
 const Stack = createNativeStackNavigator();
 
@@ -38,6 +39,7 @@ export default function App() {
             />
             <Stack.Screen name="BioScreen" component={BioScreen} />
             <Stack.Screen name="ProfileScreen" component={ProfileScreen} />
+            <Stack.Screen name="ScannerScreen" component={ScannerScreen} />
           </Stack.Navigator>
         </>
       )}

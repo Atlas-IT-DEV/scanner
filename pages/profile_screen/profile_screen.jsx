@@ -11,77 +11,84 @@ import { SvgXml } from "react-native-svg";
 import { avatar, bg4, copyIcon, logoutIcon } from "../../images/images";
 import EditModal from "../../components/modals/edit_modal";
 import { useNavigation } from "@react-navigation/native";
+import BottomMenu from "../../components/bottom_menu/bottom_menu";
 
-const ProfileScreen = ({ name_profile = "Имя Фамилия" }) => {
+const ProfileScreen = ({ name_profile = "Имя Фамилия", bottomNavigator }) => {
   const windowWidth = Dimensions.get("window").width;
-  console.log(windowWidth);
-  const navigation = useNavigation()
+
+  const navigation = useNavigation();
   return (
-    <ScrollView
-      automaticallyAdjustKeyboardInsets={true}
-      style={styles.container}
-    >
-      <SvgXml
-        xml={bg4}
-        width={windowWidth}
-        height={150}
-        style={styles.header}
-      />
-      <TouchableOpacity style={styles.avatar}>
-        <Image
-          source={{ uri: "https://reactjs.org/logo-og.png" }}
-          style={{ width: 146, height: 146, borderRadius: 100 }}
+    <>
+      <ScrollView
+        automaticallyAdjustKeyboardInsets={true}
+        style={styles.container}
+      >
+        <SvgXml
+          xml={bg4}
+          width={windowWidth}
+          height={150}
+          style={styles.header}
         />
-      </TouchableOpacity>
-      <View style={styles.mainInfo}>
-        <Text style={styles.nameText}>{name_profile}</Text>
-        <View style={styles.dataProfile}>
-          <View style={styles.dataField}>
-            <View style={{ flexDirection: "row", gap: 8 }}>
-              <Text style={styles.attributeField}>Телефон:</Text>
-              <Text style={styles.valueField}>(+7) 000 000 00 00</Text>
+        <TouchableOpacity style={styles.avatar}>
+          <Image
+            source={{ uri: "https://reactjs.org/logo-og.png" }}
+            style={{ width: 146, height: 146, borderRadius: 100 }}
+          />
+        </TouchableOpacity>
+        <View style={styles.mainInfo}>
+          <Text style={styles.nameText}>{name_profile}</Text>
+          <View style={styles.dataProfile}>
+            <View style={styles.dataField}>
+              <View style={{ flexDirection: "row", gap: 8 }}>
+                <Text style={styles.attributeField}>Телефон:</Text>
+                <Text style={styles.valueField}>(+7) 000 000 00 00</Text>
+              </View>
+              <TouchableOpacity>
+                <SvgXml xml={copyIcon} />
+              </TouchableOpacity>
             </View>
-            <TouchableOpacity>
-              <SvgXml xml={copyIcon} />
-            </TouchableOpacity>
-          </View>
-          <View style={styles.dataField}>
-            <View style={{ flexDirection: "row", gap: 8 }}>
-              <Text style={styles.attributeField}>Пол:</Text>
-              <Text style={styles.valueField}>Мужской</Text>
+            <View style={styles.dataField}>
+              <View style={{ flexDirection: "row", gap: 8 }}>
+                <Text style={styles.attributeField}>Пол:</Text>
+                <Text style={styles.valueField}>Мужской</Text>
+              </View>
+              <TouchableOpacity>
+                <SvgXml xml={copyIcon} />
+              </TouchableOpacity>
             </View>
-            <TouchableOpacity>
-              <SvgXml xml={copyIcon} />
-            </TouchableOpacity>
-          </View>
-          <View style={styles.dataField}>
-            <View style={{ flexDirection: "row", gap: 8 }}>
-              <Text style={styles.attributeField}>Дата рождения:</Text>
-              <Text style={styles.valueField}>12/01/1997</Text>
+            <View style={styles.dataField}>
+              <View style={{ flexDirection: "row", gap: 8 }}>
+                <Text style={styles.attributeField}>Дата рождения:</Text>
+                <Text style={styles.valueField}>12/01/1997</Text>
+              </View>
+              <TouchableOpacity>
+                <SvgXml xml={copyIcon} />
+              </TouchableOpacity>
             </View>
-            <TouchableOpacity>
-              <SvgXml xml={copyIcon} />
-            </TouchableOpacity>
-          </View>
-          <View style={styles.dataField}>
-            <View style={{ flexDirection: "row", gap: 8 }}>
-              <Text style={styles.attributeField}>Email:</Text>
-              <Text style={styles.valueField}>name.family@mail.ru</Text>
+            <View style={styles.dataField}>
+              <View style={{ flexDirection: "row", gap: 8 }}>
+                <Text style={styles.attributeField}>Email:</Text>
+                <Text style={styles.valueField}>name.family@mail.ru</Text>
+              </View>
+              <TouchableOpacity>
+                <SvgXml xml={copyIcon} />
+              </TouchableOpacity>
             </View>
-            <TouchableOpacity>
-              <SvgXml xml={copyIcon} />
-            </TouchableOpacity>
           </View>
         </View>
-      </View>
-      <View style={styles.buttonsView}>
-        <EditModal />
-        <TouchableOpacity style={styles.buttonLogout} onPress={() => navigation.navigate("LoginScreen")}>
-          <SvgXml xml={logoutIcon} />
-          <Text style={styles.logOutText}>Выйти</Text>
-        </TouchableOpacity>
-      </View>
-    </ScrollView>
+        <View style={styles.buttonsView}>
+          <EditModal />
+          <TouchableOpacity
+            style={styles.buttonLogout}
+            onPress={() => navigation.navigate("LoginScreen")}
+          >
+            <SvgXml xml={logoutIcon} />
+            <Text style={styles.logOutText}>Выйти</Text>
+          </TouchableOpacity>
+        </View>
+      </ScrollView>
+      <BottomMenu />
+    </>
   );
 };
 
@@ -134,6 +141,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 30,
     marginTop: 15,
     gap: 15,
+    marginBottom: 150,
   },
   buttonLogout: {
     backgroundColor: "rgba(254, 236, 235, 1)",
