@@ -1,7 +1,13 @@
-import { StyleSheet, Text, View } from "react-native";
+import { ScrollView, StyleSheet, Text, View } from "react-native";
+import BottomMenu from "../../components/bottom_menu/bottom_menu";
 
 const ScannerScreen = () => {
-  return <View style={styles.container}></View>;
+  return (
+    <>
+      <ScrollView style={styles.container}></ScrollView>
+      <BottomMenu />
+    </>
+  );
 };
 
 const styles = StyleSheet.create({

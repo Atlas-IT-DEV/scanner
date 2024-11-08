@@ -7,32 +7,62 @@ import {
   scanner_chat_inact_bm,
 } from "../../images/images";
 import { useNavigation } from "@react-navigation/native";
+import { useState } from "react";
 
 const BottomMenu = () => {
   const navigation = useNavigation();
+  const [selected, setSelected] = useState([0, 0, 1, 0]);
   return (
     <View style={styles.container}>
       <TouchableOpacity style={styles.button}>
         <SvgXml xml={messenger_inact_bm} />
-        <Text style={[styles.buttonText, styles.inactiveText]}>Чаты</Text>
+        <Text
+          style={[
+            styles.buttonText,
+            selected[0] == 1 ? styles.activeText : styles.inactiveText,
+          ]}
+        >
+          Чаты
+        </Text>
       </TouchableOpacity>
       <TouchableOpacity
         style={styles.button}
         onPress={() => navigation.navigate("ScannerScreen")}
       >
         <SvgXml xml={scanner_chat_inact_bm} />
-        <Text style={[styles.buttonText, styles.inactiveText]}>3D-сканер</Text>
+        <Text
+          style={[
+            styles.buttonText,
+            selected[1] == 1 ? styles.activeText : styles.inactiveText,
+          ]}
+        >
+          3D-сканер
+        </Text>
       </TouchableOpacity>
       <TouchableOpacity
         style={[styles.button, styles.activeButton]}
         onPress={() => navigation.navigate("ProfileScreen")}
       >
         <SvgXml xml={profile_act_bm} />
-        <Text style={[styles.buttonText, styles.activeText]}>Профиль</Text>
+        <Text
+          style={[
+            styles.buttonText,
+            selected[2] == 1 ? styles.activeText : styles.inactiveText,
+          ]}
+        >
+          Профиль
+        </Text>
       </TouchableOpacity>
       <TouchableOpacity style={styles.button}>
         <SvgXml xml={menu_inact_bm} />
-        <Text style={[styles.buttonText, styles.inactiveText]}>Меню</Text>
+        <Text
+          style={[
+            styles.buttonText,
+            selected[3] == 1 ? styles.activeText : styles.inactiveText,
+          ]}
+        >
+          Меню
+        </Text>
       </TouchableOpacity>
     </View>
   );

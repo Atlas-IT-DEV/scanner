@@ -25,7 +25,10 @@ const BioScreen = () => {
     // Проверяем разрешение на доступ к библиотеке изображений
     const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
     if (status !== "granted") {
-      Alert.alert("Разрешение на доступ", "Разрешите доступ к библиотеке изображений.");
+      Alert.alert(
+        "Разрешение на доступ",
+        "Разрешите доступ к библиотеке изображений."
+      );
       return;
     }
 
@@ -88,7 +91,12 @@ const BioScreen = () => {
           }}
           onPress={() => setModalVisible(true)}
         >
-          {photo ? <Image source={{ uri: photo }} style={{ width: 128, height: 128, borderRadius: 64 }} /> : null}
+          {photo ? (
+            <Image
+              source={{ uri: photo }}
+              style={{ width: 128, height: 128, borderRadius: 64 }}
+            />
+          ) : null}
         </TouchableOpacity>
       </View>
       <View style={styles.formView}>
