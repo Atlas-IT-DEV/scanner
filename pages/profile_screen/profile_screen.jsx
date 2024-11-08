@@ -17,6 +17,7 @@ import DateTimePicker from "@react-native-community/datetimepicker";
 import { Picker } from "@react-native-picker/picker";
 import BottomMenu from "../../components/bottom_menu/bottom_menu";
 import { useStores } from "../../store/store_context";
+import EditModal from "../../components/modals/edit_modal";
 
 const ProfileScreen = ({
   name_profile = "Имя Фамилия",
@@ -160,6 +161,7 @@ const ProfileScreen = ({
             <SvgXml xml={logoutIcon} />
             <Text style={styles.logOutText}>Выйти</Text>
           </TouchableOpacity>
+          <EditModal />
         </View>
       </ScrollView>
       {showDatePicker && (
