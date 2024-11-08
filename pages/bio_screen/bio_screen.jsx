@@ -15,7 +15,7 @@ import * as ImagePicker from "expo-image-picker";
 import { useState } from "react";
 import BioForm from "../../components/forms/bio_form";
 
-const BioScreen = () => {
+const BioScreen = ({route}) => {
   const windowWidth = Dimensions.get("window").width;
 
   const [photo, setPhoto] = useState(avatar); // Состояние для хранения выбранного изображения
@@ -92,7 +92,7 @@ const BioScreen = () => {
         </TouchableOpacity>
       </View>
       <View style={styles.formView}>
-        <BioForm />
+        <BioForm phone={route.params}/>
       </View>
 
       <Modal

@@ -1,4 +1,5 @@
 import {
+  Alert,
   StyleSheet,
   Text,
   TextInput,
@@ -8,24 +9,29 @@ import {
 import { Formik } from "formik";
 import * as Yup from "yup";
 import { SvgXml } from "react-native-svg";
-import {
-  arrow,
-  userIcon,
-} from "../../images/images";
+import { arrow, userIcon } from "../../images/images";
 import { useNavigation } from "@react-navigation/native";
 
 const nameValidationSchema = Yup.object().shape({
   nameProfile: Yup.string().required("Введите имя"),
 });
 
-const BioForm = () => {
+const BioForm = ({ phone }) => {
   const navigation = useNavigation();
   return (
     <Formik
       initialValues={{ nameProfile: "" }}
       validationSchema={nameValidationSchema}
       onSubmit={(values) => {
-        navigation.navigate("ProfileScreen");
+        console.log(values);
+        if (values.nameProfile.split(" ").length == 2) {
+          navigation.navigate("ProfileScreen", {
+            ...phone,
+            first_name: values.nameProfile,
+          });
+        } else {
+          Alert.alert("Введите имя и фамилию через пробел!");
+        }
       }}
     >
       {({

@@ -9,6 +9,8 @@ import ValidationScreen from "./pages/validation_screen/validation_screen";
 import BioScreen from "./pages/bio_screen/bio_screen";
 import ProfileScreen from "./pages/profile_screen/profile_screen";
 import ScannerScreen from "./pages/scanner_screen/scanner_screen";
+import RootStore from "./store/root_store";
+import { RootStoreContext } from "./store/store_context";
 
 const Stack = createNativeStackNavigator();
 
@@ -20,30 +22,32 @@ export default function App() {
     RalewayBold: require("./assets/fonts/Raleway-Bold.ttf"), //700
   });
   return (
-    <NavigationContainer>
-      {/* <RootStoreContext.Provider value={new RootStore()}> */}
-      {fontsLoaded && (
-        <>
-          <Stack.Navigator
-            initialRouteName="LoginScreen"
-            screenOptions={{ headerShown: false }}
-          >
-            <Stack.Screen name="LoginScreen" component={LoginScreen} />
-            <Stack.Screen
-              name="RegistrationScreen"
-              component={RegistrationScreen}
-            />
-            <Stack.Screen
-              name="ValidationScreen"
-              component={ValidationScreen}
-            />
-            <Stack.Screen name="BioScreen" component={BioScreen} />
-            <Stack.Screen name="ProfileScreen" component={ProfileScreen} />
-            <Stack.Screen name="ScannerScreen" component={ScannerScreen} />
-          </Stack.Navigator>
-        </>
-      )}
-      {/* </RootStoreContext.Provider> */}
-    </NavigationContainer>
+    <RootStoreContext.Provider value={new RootStore()}>
+      <NavigationContainer>
+        {/* <RootStoreContext.Provider value={new RootStore()}> */}
+        {fontsLoaded && (
+          <>
+            <Stack.Navigator
+              initialRouteName="LoginScreen"
+              screenOptions={{ headerShown: false }}
+            >
+              <Stack.Screen name="LoginScreen" component={LoginScreen} />
+              <Stack.Screen
+                name="RegistrationScreen"
+                component={RegistrationScreen}
+              />
+              <Stack.Screen
+                name="ValidationScreen"
+                component={ValidationScreen}
+              />
+              <Stack.Screen name="BioScreen" component={BioScreen} />
+              <Stack.Screen name="ProfileScreen" component={ProfileScreen} />
+              <Stack.Screen name="ScannerScreen" component={ScannerScreen} />
+            </Stack.Navigator>
+          </>
+        )}
+        {/* </RootStoreContext.Provider> */}
+      </NavigationContainer>
+    </RootStoreContext.Provider>
   );
 }
