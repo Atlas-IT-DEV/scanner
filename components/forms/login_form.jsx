@@ -11,6 +11,7 @@ import * as Yup from "yup";
 import { useNavigation } from "@react-navigation/native";
 import { SvgXml } from "react-native-svg";
 import { arrow, rememberActive, rememberInactive } from "../../images/images";
+import { useStores } from "../../store/store_context";
 
 const phoneValidationSchema = Yup.object().shape({
   phoneNumber: Yup.string()
@@ -24,13 +25,14 @@ const LoginForm = () => {
   const [state, setState] = useState([false, "+"]);
 
   const copyState = Array.from(state);
+  const { pageStore } = useStores();
 
   return (
     <Formik
       initialValues={{ phoneNumber: "" }}
       validationSchema={phoneValidationSchema}
       onSubmit={(values) => {
-        navigation.navigate("ValidationScreen");
+        navigation.navigate("ValidationScreen", values);
       }}
     >
       {({
@@ -71,6 +73,8 @@ const LoginForm = () => {
               onPress={() => {
                 copyState[0] = !copyState[0];
                 setState(copyState);
+                console.log(copyState)
+                pageStore.updateRemember(copyState[0])
               }}
             >
               <SvgXml xml={state[0] ? rememberActive : rememberInactive} />
@@ -93,7 +97,7 @@ const LoginForm = () => {
                     alignContent: "center",
                     justifyContent: "center",
                     alignItems: "center",
-                    opacity:0.4
+                    opacity: 0.4,
                   }}
                 >
                   <SvgXml xml={arrow} />

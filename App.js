@@ -10,6 +10,8 @@ import ValidationScreen from "./pages/validation_screen/validation_screen";
 import BioScreen from "./pages/bio_screen/bio_screen";
 import ProfileScreen from "./pages/profile_screen/profile_screen";
 import ScannerScreen from "./pages/scanner_screen/scanner_screen";
+import RootStore from "./store/root_store";
+import { RootStoreContext } from "./store/store_context";
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -27,7 +29,7 @@ export default function App() {
       {fontsLoaded && (
         <>
           <Stack.Navigator
-            initialRouteName="ProfileScreen"
+            initialRouteName="LoginScreen"
             screenOptions={{ headerShown: false }}
           >
             <Stack.Screen name="LoginScreen" component={LoginScreen} />
@@ -40,14 +42,9 @@ export default function App() {
               component={ValidationScreen}
             />
             <Stack.Screen name="BioScreen" component={BioScreen} />
-            {/* <Stack.Screen  />
-            <Stack.Screen  /> */}
-            <Tab.Screen name="ProfileScreen" component={ProfileScreen} />
-            <Tab.Screen name="ScannerScreen" component={ScannerScreen} />
+            <Stack.Screen name="ProfileScreen" component={ProfileScreen} />
+            <Stack.Screen name="ScannerScreen" component={ScannerScreen} />
           </Stack.Navigator>
-          {/* <Tab.Navigator> */}
-
-          {/* </Tab.Navigator> */}
         </>
       )}
       {/* </RootStoreContext.Provider> */}

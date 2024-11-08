@@ -1,22 +1,75 @@
+import React, { useState } from "react";
 import {
   Dimensions,
   Image,
   ScrollView,
   StyleSheet,
   Text,
+  TextInput,
   TouchableOpacity,
   View,
 } from "react-native";
 import { SvgXml } from "react-native-svg";
 import { avatar, bg4, copyIcon, logoutIcon } from "../../images/images";
-import EditModal from "../../components/modals/edit_modal";
 import { useNavigation } from "@react-navigation/native";
+import * as ImagePicker from "expo-image-picker";
+import DateTimePicker from "@react-native-community/datetimepicker";
+import { Picker } from "@react-native-picker/picker";
 import BottomMenu from "../../components/bottom_menu/bottom_menu";
+import { useStores } from "../../store/store_context";
 
-const ProfileScreen = ({ name_profile = "Имя Фамилия", bottomNavigator }) => {
+const ProfileScreen = ({
+  name_profile = "Имя Фамилия",
+  bottomNavigator,
+  route,
+}) => {
   const windowWidth = Dimensions.get("window").width;
-
   const navigation = useNavigation();
+
+  const [name, setName] = useState(route.params.first_name);
+  const [phone, setPhone] = useState(route.params.phoneNumber);
+  const [gender, setGender] = useState("male");
+  const [birthdate, setBirthdate] = useState(new Date(1997, 0, 12));
+  const [email, setEmail] = useState("name.family@mail.ru");
+  const [avatarUri, setAvatarUri] = useState("https://reactjs.org/logo-og.png");
+  const [showDatePicker, setShowDatePicker] = useState(false);
+  const [profileChecked, setProfilechecked] = useState(false);
+
+  const { pageStore } = useStores();
+
+  const onPickImage = async () => {
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [1, 1],
+      quality: 1,
+    });
+    if (!result.canceled) {
+      setAvatarUri(result.assets[0].uri);
+    }
+  };
+
+  const onDateChange = (event, selectedDate) => {
+    const currentDate = selectedDate || birthdate;
+    setShowDatePicker(false);
+    setBirthdate(currentDate);
+  };
+  const createUser = async () => {
+    const values = {
+      id: 0,
+      first_name: route.params.first_name.split(" ")[0],
+      last_name: route.params.first_name.split(" ")[1],
+      phone: route.params.phoneNumber,
+      password: "12345",
+      data_register: new Date().toISOString().slice(0, 19),
+      data_birthday: birthdate.toISOString().slice(0, 19),
+      gender: gender,
+      role: "USER",
+      image_id: 1,
+    };
+    await pageStore.registerUser(values);
+  };
+
   return (
     <>
       <ScrollView
@@ -29,55 +82,77 @@ const ProfileScreen = ({ name_profile = "Имя Фамилия", bottomNavigator
           height={150}
           style={styles.header}
         />
-        <TouchableOpacity style={styles.avatar}>
+        <TouchableOpacity style={styles.avatar} onPress={onPickImage}>
           <Image
-            source={{ uri: "https://reactjs.org/logo-og.png" }}
-            style={{ width: 146, height: 146, borderRadius: 100 }}
+            source={{ uri: avatarUri }}
+            style={{
+              width: 146,
+              height: 146,
+              borderRadius: 100,
+              resizeMode: "cover",
+            }}
           />
         </TouchableOpacity>
         <View style={styles.mainInfo}>
-          <Text style={styles.nameText}>{name_profile}</Text>
+          <TextInput
+            style={styles.nameText}
+            value={name}
+            onChangeText={setName}
+            placeholder="Имя Фамилия"
+          />
           <View style={styles.dataProfile}>
             <View style={styles.dataField}>
-              <View style={{ flexDirection: "row", gap: 8 }}>
-                <Text style={styles.attributeField}>Телефон:</Text>
-                <Text style={styles.valueField}>(+7) 000 000 00 00</Text>
+              <Text style={styles.attributeField}>Телефон:</Text>
+              <TextInput
+                style={styles.valueField}
+                value={phone}
+                onChangeText={setPhone}
+                keyboardType="phone-pad"
+              />
+            </View>
+            <View style={styles.dataField}>
+              <Text style={styles.attributeField}>Пол:</Text>
+              <View style={styles.pickerContainer}>
+                <Picker
+                  selectedValue={gender}
+                  onValueChange={(itemValue) => setGender(itemValue)}
+                  style={styles.picker}
+                >
+                  <Picker.Item label="Мужской" value="male" />
+                  <Picker.Item label="Женский" value="female" />
+                </Picker>
               </View>
-              <TouchableOpacity>
-                <SvgXml xml={copyIcon} />
+            </View>
+            <View style={styles.dataField}>
+              <Text style={styles.attributeField}>Дата рождения:</Text>
+              <TouchableOpacity onPress={() => setShowDatePicker(true)}>
+                <Text style={styles.valueField}>
+                  {birthdate.toLocaleDateString()}
+                </Text>
               </TouchableOpacity>
             </View>
             <View style={styles.dataField}>
-              <View style={{ flexDirection: "row", gap: 8 }}>
-                <Text style={styles.attributeField}>Пол:</Text>
-                <Text style={styles.valueField}>Мужской</Text>
-              </View>
-              <TouchableOpacity>
-                <SvgXml xml={copyIcon} />
-              </TouchableOpacity>
-            </View>
-            <View style={styles.dataField}>
-              <View style={{ flexDirection: "row", gap: 8 }}>
-                <Text style={styles.attributeField}>Дата рождения:</Text>
-                <Text style={styles.valueField}>12/01/1997</Text>
-              </View>
-              <TouchableOpacity>
-                <SvgXml xml={copyIcon} />
-              </TouchableOpacity>
-            </View>
-            <View style={styles.dataField}>
-              <View style={{ flexDirection: "row", gap: 8 }}>
-                <Text style={styles.attributeField}>Email:</Text>
-                <Text style={styles.valueField}>name.family@mail.ru</Text>
-              </View>
-              <TouchableOpacity>
-                <SvgXml xml={copyIcon} />
-              </TouchableOpacity>
+              <Text style={styles.attributeField}>Email:</Text>
+              <TextInput
+                style={styles.valueField}
+                value={email}
+                onChangeText={setEmail}
+                keyboardType="email-address"
+              />
             </View>
           </View>
         </View>
+        <View style={styles.buttonsViewCheck}>
+          <TouchableOpacity
+            style={styles.buttonLogoutCheck}
+            onPress={() => {
+              createUser();
+            }}
+          >
+            <Text style={styles.logOutTextCheck}>Сохранить</Text>
+          </TouchableOpacity>
+        </View>
         <View style={styles.buttonsView}>
-          <EditModal />
           <TouchableOpacity
             style={styles.buttonLogout}
             onPress={() => navigation.navigate("LoginScreen")}
@@ -87,6 +162,14 @@ const ProfileScreen = ({ name_profile = "Имя Фамилия", bottomNavigator
           </TouchableOpacity>
         </View>
       </ScrollView>
+      {showDatePicker && (
+        <DateTimePicker
+          value={birthdate}
+          mode="date"
+          display="default"
+          onChange={onDateChange}
+        />
+      )}
       <BottomMenu />
     </>
   );
@@ -125,6 +208,8 @@ const styles = StyleSheet.create({
   dataField: {
     flexDirection: "row",
     justifyContent: "space-between",
+    alignContent: "center",
+    alignItems: "center",
   },
   attributeField: {
     color: "rgba(104, 106, 138, 1)",
@@ -135,16 +220,41 @@ const styles = StyleSheet.create({
     color: "rgba(44, 45, 58, 1)",
     fontFamily: "RalewayRegular",
     fontSize: 16,
+    borderBottomWidth: 1,
+    borderColor: "#ccc",
+    paddingBottom: 4,
+    width: 180,
   },
-
+  pickerContainer: {
+    width: "60%",
+    borderBottomWidth: 1,
+    borderColor: "#ccc",
+  },
+  picker: {
+    color: "rgba(44, 45, 58, 1)",
+  },
   buttonsView: {
     marginHorizontal: 30,
     marginTop: 15,
     gap: 15,
     marginBottom: 150,
   },
+  buttonsViewCheck: {
+    marginHorizontal: 30,
+    marginTop: 15,
+    gap: 15,
+  },
   buttonLogout: {
     backgroundColor: "rgba(254, 236, 235, 1)",
+    height: 50,
+    justifyContent: "center",
+    alignItems: "center",
+    flexDirection: "row",
+    gap: 15,
+    borderRadius: 8,
+  },
+  buttonLogoutCheck: {
+    backgroundColor: "rgba(18, 145, 137, 0.5)",
     height: 50,
     justifyContent: "center",
     alignItems: "center",
@@ -157,5 +267,11 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontFamily: "RalewayMedium",
   },
+  logOutTextCheck: {
+    color: "rgba(18, 145, 137, 1)",
+    fontSize: 16,
+    fontFamily: "RalewayMedium",
+  },
 });
+
 export default ProfileScreen;

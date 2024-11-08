@@ -13,7 +13,7 @@ import { arrowBack, background, bg2 } from "../../images/images";
 import { useEffect, useRef, useState } from "react";
 import ValidationForm from "../../components/forms/validation_form";
 
-const ValidationScreen = () => {
+const ValidationScreen = ({route}) => {
   const windowWidth = Dimensions.get("window").width;
   const windowHeight = Dimensions.get("window").height;
 
@@ -85,7 +85,7 @@ const ValidationScreen = () => {
         </Text>
       </View>
       <View style={styles.formView}>
-        <ValidationForm />
+        <ValidationForm route={route.params}/>
       </View>
     </ScrollView>
   );

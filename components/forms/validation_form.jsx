@@ -7,13 +7,11 @@ import {
   View,
   StyleSheet,
   TouchableOpacity,
+  Alert,
 } from "react-native";
 import { SvgXml } from "react-native-svg";
 import * as Yup from "yup";
-import {
-  clockIcon,
-  arrow
-} from "../../images/images";
+import { clockIcon, arrow } from "../../images/images";
 
 const verificationSchema = Yup.object().shape({
   verificationCode: Yup.string()
@@ -21,7 +19,7 @@ const verificationSchema = Yup.object().shape({
     .required("Введите код подтверждения"),
 });
 
-const ValidationForm = () => {
+const ValidationForm = ({ route }) => {
   const navigation = useNavigation();
   const [code, setCode] = useState([["", "", "", ""], 10, true]);
   const newCode = Array.from(code);
@@ -118,42 +116,49 @@ const ValidationForm = () => {
           </View>
           <TouchableOpacity
             style={styles.continueButton}
-            onPress={() => navigation.navigate("BioScreen")}
+            onPress={() => {
+              if (code[0].join("") == "1111") {
+                console.log(route)
+                navigation.navigate("BioScreen", route);
+              } else {
+                Alert.alert("Код верификации неверный!")
+              }
+            }}
           >
             {verificationCode.length > 4 ? (
-                <View
-                  style={{
-                    width: 54,
-                    height: 54,
-                    borderRadius: 27,
-                    backgroundColor: "#129189",
-                    display: "flex",
-                    flexDirection: "row",
-                    alignContent: "center",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    opacity:0.4
-                  }}
-                >
-                  <SvgXml xml={arrow} />
-                </View>
-              ) : (
-                <View
-                  style={{
-                    width: 54,
-                    height: 54,
-                    borderRadius: 27,
-                    backgroundColor: "#129189",
-                    display: "flex",
-                    flexDirection: "row",
-                    alignContent: "center",
-                    justifyContent: "center",
-                    alignItems: "center",
-                  }}
-                >
-                  <SvgXml xml={arrow} />
-                </View>
-              )}
+              <View
+                style={{
+                  width: 54,
+                  height: 54,
+                  borderRadius: 27,
+                  backgroundColor: "#129189",
+                  display: "flex",
+                  flexDirection: "row",
+                  alignContent: "center",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  opacity: 0.4,
+                }}
+              >
+                <SvgXml xml={arrow} />
+              </View>
+            ) : (
+              <View
+                style={{
+                  width: 54,
+                  height: 54,
+                  borderRadius: 27,
+                  backgroundColor: "#129189",
+                  display: "flex",
+                  flexDirection: "row",
+                  alignContent: "center",
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                <SvgXml xml={arrow} />
+              </View>
+            )}
           </TouchableOpacity>
         </View>
       )}
