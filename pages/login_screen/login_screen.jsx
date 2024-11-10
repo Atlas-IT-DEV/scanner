@@ -84,9 +84,7 @@ const LoginScreen = () => {
             <Text style={styles.loginText}>Регистрация</Text>
           </TouchableOpacity>
         </View>
-        <Text style={styles.hintText}>
-          Введите свой {"\n"}мобильный телефон
-        </Text>
+        <Text style={styles.hintText}>Введите данные {"\n"}для входа</Text>
       </View>
       <View style={styles.formView}>
         <LoginForm />

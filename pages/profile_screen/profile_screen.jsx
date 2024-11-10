@@ -18,164 +18,168 @@ import { Picker } from "@react-native-picker/picker";
 import BottomMenu from "../../components/bottom_menu/bottom_menu";
 import { useStores } from "../../store/store_context";
 import EditModal from "../../components/modals/edit_modal";
+import { observer } from "mobx-react-lite";
 
-const ProfileScreen = ({
-  name_profile = "Имя Фамилия",
-  bottomNavigator,
-  route,
-}) => {
-  const windowWidth = Dimensions.get("window").width;
-  const navigation = useNavigation();
+const ProfileScreen = observer(
+  ({ name_profile = "Имя Фамилия", bottomNavigator, route }) => {
+    const windowWidth = Dimensions.get("window").width;
+    const navigation = useNavigation();
 
-  const [name, setName] = useState(route.params.first_name);
-  const [phone, setPhone] = useState(route.params.phoneNumber);
-  const [gender, setGender] = useState("male");
-  const [birthdate, setBirthdate] = useState(new Date(1997, 0, 12));
-  const [email, setEmail] = useState("name.family@mail.ru");
-  const [avatarUri, setAvatarUri] = useState("https://reactjs.org/logo-og.png");
-  const [showDatePicker, setShowDatePicker] = useState(false);
-  const [profileChecked, setProfilechecked] = useState(false);
+    const [name, setName] = useState(route.params.first_name);
+    const [phone, setPhone] = useState(route.params.phoneNumber);
+    const [gender, setGender] = useState("male");
+    const [birthdate, setBirthdate] = useState(new Date(1997, 0, 12));
+    const [email, setEmail] = useState("name.family@mail.ru");
+    const [avatarUri, setAvatarUri] = useState(
+      "https://reactjs.org/logo-og.png"
+    );
+    const [showDatePicker, setShowDatePicker] = useState(false);
+    const [profileChecked, setProfilechecked] = useState(false);
 
-  const { pageStore } = useStores();
+    const { pageStore } = useStores();
 
-  const onPickImage = async () => {
-    const result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      allowsEditing: true,
-      aspect: [1, 1],
-      quality: 1,
-    });
-    if (!result.canceled) {
-      setAvatarUri(result.assets[0].uri);
-    }
-  };
-
-  const onDateChange = (event, selectedDate) => {
-    const currentDate = selectedDate || birthdate;
-    setShowDatePicker(false);
-    setBirthdate(currentDate);
-  };
-  const createUser = async () => {
-    const values = {
-      id: 0,
-      first_name: route.params.first_name.split(" ")[0],
-      last_name: route.params.first_name.split(" ")[1],
-      phone: route.params.phoneNumber,
-      password: "12345",
-      data_register: new Date().toISOString().slice(0, 19),
-      data_birthday: birthdate.toISOString().slice(0, 19),
-      gender: gender,
-      role: "USER",
-      image_id: 1,
+    const onPickImage = async () => {
+      const result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        allowsEditing: true,
+        aspect: [1, 1],
+        quality: 1,
+      });
+      if (!result.canceled) {
+        setAvatarUri(result.assets[0].uri);
+      }
     };
-    await pageStore.registerUser(values);
-  };
 
-  return (
-    <>
-      <ScrollView
-        automaticallyAdjustKeyboardInsets={true}
-        style={styles.container}
-      >
-        <SvgXml
-          xml={bg4}
-          width={windowWidth}
-          height={150}
-          style={styles.header}
-        />
-        <TouchableOpacity style={styles.avatar} onPress={onPickImage}>
-          <Image
-            source={{ uri: avatarUri }}
-            style={{
-              width: 146,
-              height: 146,
-              borderRadius: 100,
-              resizeMode: "cover",
-            }}
+    const onDateChange = (event, selectedDate) => {
+      const currentDate = selectedDate || birthdate;
+      setShowDatePicker(false);
+      setBirthdate(currentDate);
+    };
+    const createUser = async () => {
+      console.log(route.params);
+      const values = {
+        id: 0,
+        first_name: route.params.first_name.split(" ")[0],
+        last_name: route.params.first_name.split(" ")[1],
+        phone: route.params.phoneNumber,
+        password: "12345",
+        data_register: new Date().toISOString().slice(0, 19),
+        data_birthday: birthdate.toISOString().slice(0, 19),
+        gender: gender,
+        role: "USER",
+        image_id: 1,
+      };
+      await pageStore.registerUser(values);
+    };
+
+    return (
+      <>
+        <ScrollView
+          automaticallyAdjustKeyboardInsets={true}
+          style={styles.container}
+        >
+          <SvgXml
+            xml={bg4}
+            width={windowWidth}
+            height={150}
+            style={styles.header}
           />
-        </TouchableOpacity>
-        <View style={styles.mainInfo}>
-          <TextInput
-            style={styles.nameText}
-            value={name}
-            onChangeText={setName}
-            placeholder="Имя Фамилия"
-          />
-          <View style={styles.dataProfile}>
-            <View style={styles.dataField}>
-              <Text style={styles.attributeField}>Телефон:</Text>
-              <TextInput
-                style={styles.valueField}
-                value={phone}
-                onChangeText={setPhone}
-                keyboardType="phone-pad"
-              />
-            </View>
-            <View style={styles.dataField}>
-              <Text style={styles.attributeField}>Пол:</Text>
-              <View style={styles.pickerContainer}>
-                <Picker
-                  selectedValue={gender}
-                  onValueChange={(itemValue) => setGender(itemValue)}
-                  style={styles.picker}
-                >
-                  <Picker.Item label="Мужской" value="male" />
-                  <Picker.Item label="Женский" value="female" />
-                </Picker>
+          <TouchableOpacity style={styles.avatar} onPress={onPickImage}>
+            <Image
+              source={{ uri: avatarUri }}
+              style={{
+                width: 146,
+                height: 146,
+                borderRadius: 100,
+                resizeMode: "cover",
+              }}
+            />
+          </TouchableOpacity>
+          <View style={styles.mainInfo}>
+            <TextInput
+              style={styles.nameText}
+              value={name}
+              onChangeText={setName}
+              placeholder="Имя Фамилия"
+            />
+            <View style={styles.dataProfile}>
+              <View style={styles.dataField}>
+                <Text style={styles.attributeField}>Телефон:</Text>
+                <TextInput
+                  style={styles.valueField}
+                  value={phone}
+                  onChangeText={setPhone}
+                  keyboardType="phone-pad"
+                />
+              </View>
+              <View style={styles.dataField}>
+                <Text style={styles.attributeField}>Пол:</Text>
+                <View style={styles.pickerContainer}>
+                  <Picker
+                    selectedValue={gender}
+                    onValueChange={(itemValue) => setGender(itemValue)}
+                    style={styles.picker}
+                  >
+                    <Picker.Item label="Мужской" value="male" />
+                    <Picker.Item label="Женский" value="female" />
+                  </Picker>
+                </View>
+              </View>
+              <View style={styles.dataField}>
+                <Text style={styles.attributeField}>Дата рождения:</Text>
+                <TouchableOpacity onPress={() => setShowDatePicker(true)}>
+                  <Text style={styles.valueField}>
+                    {birthdate.toLocaleDateString()}
+                  </Text>
+                </TouchableOpacity>
+              </View>
+              <View style={styles.dataField}>
+                <Text style={styles.attributeField}>Email:</Text>
+                <TextInput
+                  style={styles.valueField}
+                  value={email}
+                  onChangeText={setEmail}
+                  keyboardType="email-address"
+                />
               </View>
             </View>
-            <View style={styles.dataField}>
-              <Text style={styles.attributeField}>Дата рождения:</Text>
-              <TouchableOpacity onPress={() => setShowDatePicker(true)}>
-                <Text style={styles.valueField}>
-                  {birthdate.toLocaleDateString()}
-                </Text>
-              </TouchableOpacity>
-            </View>
-            <View style={styles.dataField}>
-              <Text style={styles.attributeField}>Email:</Text>
-              <TextInput
-                style={styles.valueField}
-                value={email}
-                onChangeText={setEmail}
-                keyboardType="email-address"
-              />
-            </View>
           </View>
-        </View>
-        <View style={styles.buttonsViewCheck}>
-          <TouchableOpacity
-            style={styles.buttonLogoutCheck}
-            onPress={() => {
-              createUser();
-            }}
-          >
-            <Text style={styles.logOutTextCheck}>Сохранить</Text>
-          </TouchableOpacity>
-        </View>
-        <View style={styles.buttonsView}>
-          <TouchableOpacity
-            style={styles.buttonLogout}
-            onPress={() => navigation.navigate("LoginScreen")}
-          >
-            <SvgXml xml={logoutIcon} />
-            <Text style={styles.logOutText}>Выйти</Text>
-          </TouchableOpacity>
-          <EditModal />
-        </View>
-      </ScrollView>
-      {showDatePicker && (
-        <DateTimePicker
-          value={birthdate}
-          mode="date"
-          display="default"
-          onChange={onDateChange}
-        />
-      )}
-      <BottomMenu />
-    </>
-  );
-};
+          <View style={styles.buttonsViewCheck}>
+            {!pageStore.registered && (
+              <TouchableOpacity
+                style={styles.buttonLogoutCheck}
+                onPress={() => {
+                  createUser();
+                }}
+              >
+                <Text style={styles.logOutTextCheck}>Сохранить</Text>
+              </TouchableOpacity>
+            )}
+          </View>
+          <View style={styles.buttonsView}>
+            <TouchableOpacity
+              style={styles.buttonLogout}
+              onPress={() => navigation.navigate("LoginScreen")}
+            >
+              <SvgXml xml={logoutIcon} />
+              <Text style={styles.logOutText}>Выйти</Text>
+            </TouchableOpacity>
+            <EditModal />
+          </View>
+        </ScrollView>
+        {showDatePicker && (
+          <DateTimePicker
+            value={birthdate}
+            mode="date"
+            display="default"
+            onChange={onDateChange}
+          />
+        )}
+        <BottomMenu />
+      </>
+    );
+  }
+);
 
 const styles = StyleSheet.create({
   container: {

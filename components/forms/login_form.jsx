@@ -19,6 +19,7 @@ const phoneValidationSchema = Yup.object().shape({
     .min(12, "Номер слишком короткий")
     .max(15, "Номер слишком длинный")
     .required("Введите номер телефона"),
+  password: Yup.string().required("Введите пароль"),
 });
 const LoginForm = () => {
   const navigation = useNavigation();
@@ -31,8 +32,14 @@ const LoginForm = () => {
     <Formik
       initialValues={{ phoneNumber: "" }}
       validationSchema={phoneValidationSchema}
-      onSubmit={(values) => {
-        navigation.navigate("ValidationScreen", values);
+      onSubmit={async (values) => {
+        await pageStore.login({
+          phone: values.phoneNumber,
+          password: values.password,
+        });
+        pageStore.token &&
+          pageStore.registered &&
+          navigation.navigate("ScannerScreen", values);
       }}
     >
       {({
@@ -67,14 +74,30 @@ const LoginForm = () => {
           {touched.phoneNumber && errors.phoneNumber && (
             <Text style={{ color: "red" }}>{errors.phoneNumber}</Text>
           )}
+          <View style={styles.phoneView}>
+            <TextInput
+              keyboardType="visible-password"
+              placeholder=""
+              placeholderTextColor={"rgba(156, 156, 156, 1)"}
+              onChangeText={(text) => {
+                setFieldValue("password", text);
+              }}
+              onBlur={handleBlur("phoneNumber")}
+              value={values.password}
+              style={styles.phoneInput}
+            />
+          </View>
+          {touched.password && errors.password && (
+            <Text style={{ color: "red" }}>{errors.password}</Text>
+          )}
           <View style={styles.bottomView}>
             <TouchableOpacity
               style={styles.rememberButton}
               onPress={() => {
                 copyState[0] = !copyState[0];
                 setState(copyState);
-                console.log(copyState)
-                pageStore.updateRemember(copyState[0])
+                console.log(copyState);
+                pageStore.updateRemember(copyState[0]);
               }}
             >
               <SvgXml xml={state[0] ? rememberActive : rememberInactive} />

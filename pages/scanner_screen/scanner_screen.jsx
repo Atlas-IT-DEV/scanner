@@ -13,16 +13,17 @@ import { SvgXml } from "react-native-svg";
 import { man } from "../../images/images";
 import { useEffect, useState } from "react";
 import { TouchableOpacity } from "react-native";
+import { useStores } from "../../store/store_context";
 
-const ScannerScreen = () => {
+const ScannerScreen = ({ route }) => {
   const [products, setProducts] = useState([]);
   const [uniqCategories, setUniqCategories] = useState([]);
-  const token =
-    "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJUT0tFTl9UWVBFX0ZJRUxEIjoiYWNjZXNzX3Rva2VuX3R5cGUiLCJzdWIiOiJBRE1JTiIsInVzZXJfaWQiOjEwLCJmaXJzdF9uYW1lIjoiRGltYXMiLCJsYXN0X25hbWUiOiJQcm8iLCJleHAiOjE3MzEwOTkxOTMsImlhdCI6MTczMTA5NTU5M30.RANhVhF8IF_Gl3u1taxH_4pf-uE7Sn94km_mikDnEkIvMkitQnmxGlNyvHEHYuCRSNj_C5S1eScwdMxvZ2dHp3zKPolzQacKJIIiF9Xw1fw99C4hIdmk-v1wB_1yxg06xNXXdmp6fjmqlNKRplQ2QCVG2cR6ArDXjtT8wXxWj1iKTXRYUfVmLaRWQc7ezs7wRZiIRddNYc3r5Clzdx81BAYW1PU_k-LL-6u-nox3FZoto6ZT6nWavK-KeW_nNNVjbOrlMSY3y6b4HTPQ4qYTNx58wAEUvvpg1BoqRzapSPTmYyi6xxnGScOSrh6xVBiTkcuy3xYhwPaXfFq1aOMmGw";
+  const { pageStore } = useStores();
+
   useEffect(() => {
     const getAllProducts = async () => {
       const response = await fetch(
-        "http://158.255.6.10:8010/products/?dirs=true",
+        "https://orion-lab.tech:8010/products/?dirs=true",
         {
           method: "GET",
           headers: {

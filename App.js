@@ -25,29 +25,29 @@ export default function App() {
   });
   return (
     <NavigationContainer>
-      {/* <RootStoreContext.Provider value={new RootStore()}> */}
-      {fontsLoaded && (
-        <>
-          <Stack.Navigator
-            initialRouteName="LoginScreen"
-            screenOptions={{ headerShown: false }}
-          >
-            <Stack.Screen name="LoginScreen" component={LoginScreen} />
-            <Stack.Screen
-              name="RegistrationScreen"
-              component={RegistrationScreen}
-            />
-            <Stack.Screen
-              name="ValidationScreen"
-              component={ValidationScreen}
-            />
-            <Stack.Screen name="BioScreen" component={BioScreen} />
-            <Stack.Screen name="ProfileScreen" component={ProfileScreen} />
-            <Stack.Screen name="ScannerScreen" component={ScannerScreen} />
-          </Stack.Navigator>
-        </>
-      )}
-      {/* </RootStoreContext.Provider> */}
+      <RootStoreContext.Provider value={new RootStore()}>
+        {fontsLoaded && (
+          <>
+            <Stack.Navigator
+              initialRouteName="LoginScreen"
+              screenOptions={{ headerShown: false }}
+            >
+              <Stack.Screen name="LoginScreen" component={LoginScreen} />
+              <Stack.Screen
+                name="RegistrationScreen"
+                component={RegistrationScreen}
+              />
+              <Stack.Screen
+                name="ValidationScreen"
+                component={ValidationScreen}
+              />
+              <Stack.Screen name="BioScreen" component={BioScreen} />
+              <Stack.Screen name="ProfileScreen" component={ProfileScreen} />
+              <Stack.Screen name="ScannerScreen" component={ScannerScreen} />
+            </Stack.Navigator>
+          </>
+        )}
+      </RootStoreContext.Provider>
     </NavigationContainer>
   );
 }

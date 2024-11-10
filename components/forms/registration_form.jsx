@@ -10,12 +10,8 @@ import { Formik } from "formik";
 import * as Yup from "yup";
 import { useNavigation } from "@react-navigation/native";
 import { SvgXml } from "react-native-svg";
-import {
-  continueButtonActive,
-  continueButtonInactive,
-  rememberActive,
-  rememberInactive,
-} from "../../images/images";
+import { arrow, rememberActive, rememberInactive } from "../../images/images";
+import { useStores } from "../../store/store_context";
 
 const phoneValidationSchema = Yup.object().shape({
   phoneNumber: Yup.string()
@@ -29,13 +25,14 @@ const RegistrationForm = () => {
   const [state, setState] = useState([false, "+"]);
 
   const copyState = Array.from(state);
+  const { pageStore } = useStores();
 
   return (
     <Formik
       initialValues={{ phoneNumber: "" }}
       validationSchema={phoneValidationSchema}
       onSubmit={(values) => {
-        navigation.navigate("ValidationScreen");
+        navigation.navigate("ValidationScreen", values);
       }}
     >
       {({
@@ -76,9 +73,11 @@ const RegistrationForm = () => {
               onPress={() => {
                 copyState[0] = !copyState[0];
                 setState(copyState);
+                console.log(copyState);
+                pageStore.updateRemember(copyState[0]);
               }}
             >
-              {/* <SvgXml xml={state[0] ? rememberActive : rememberInactive} /> */}
+              <SvgXml xml={state[0] ? rememberActive : rememberInactive} />
               <Text style={styles.rememberButtonText}>Запомнить меня</Text>
             </TouchableOpacity>
 
@@ -86,13 +85,40 @@ const RegistrationForm = () => {
               disabled={errors.phoneNumber ? true : false}
               onPress={handleSubmit}
             >
-              {/* <SvgXml
-                xml={
-                  errors.phoneNumber
-                    ? continueButtonInactive
-                    : continueButtonActive
-                }
-              /> */}
+              {errors.phoneNumber ? (
+                <View
+                  style={{
+                    width: 54,
+                    height: 54,
+                    borderRadius: 27,
+                    backgroundColor: "#129189",
+                    display: "flex",
+                    flexDirection: "row",
+                    alignContent: "center",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    opacity: 0.4,
+                  }}
+                >
+                  <SvgXml xml={arrow} />
+                </View>
+              ) : (
+                <View
+                  style={{
+                    width: 54,
+                    height: 54,
+                    borderRadius: 27,
+                    backgroundColor: "#129189",
+                    display: "flex",
+                    flexDirection: "row",
+                    alignContent: "center",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  <SvgXml xml={arrow} />
+                </View>
+              )}
             </TouchableOpacity>
           </View>
         </>
