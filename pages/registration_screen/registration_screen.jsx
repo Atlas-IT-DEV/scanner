@@ -64,13 +64,13 @@ const RegistrationScreen = () => {
     >
       {isKeyboardVisible ? fadeOut() : fadeIn()}
       <Animated.View style={{ opacity: fadeAnim, zIndex: 2 }}>
-        {/* <SvgXml xml={background} width={windowWidth} style={styles.backgound} /> */}
+        <SvgXml xml={background} width={windowWidth} style={styles.backgound} />
       </Animated.View>
-      {/* <SvgXml
+      <SvgXml
         xml={bg2}
         width={windowWidth}
         style={{ zIndex: 1, position: "absolute" }}
-      /> */}
+      />
 
       <View style={styles.header}>
         <View style={styles.headView}>
