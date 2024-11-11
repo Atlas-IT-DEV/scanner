@@ -11,13 +11,19 @@ import * as Yup from "yup";
 import { SvgXml } from "react-native-svg";
 import { arrow, userIcon } from "../../images/images";
 import { useNavigation } from "@react-navigation/native";
+import pageStore from "../../store/page_store";
+
+import { useStores } from "../../store/store_context";
+import { observer } from "mobx-react-lite";
 
 const nameValidationSchema = Yup.object().shape({
   nameProfile: Yup.string().required("Введите имя"),
 });
 
-const BioForm = ({ phone }) => {
+const BioForm = observer(() => {
   const navigation = useNavigation();
+  const { pageStore } = useStores();
+  console.log("Номер телефона:", pageStore.phoneNumber);
   return (
     <Formik
       initialValues={{ nameProfile: "" }}
@@ -25,10 +31,8 @@ const BioForm = ({ phone }) => {
       onSubmit={(values) => {
         console.log(values);
         if (values.nameProfile.split(" ").length == 2) {
-          navigation.navigate("ProfileScreen", {
-            ...phone,
-            first_name: values.nameProfile,
-          });
+          navigation.navigate("TabScreen");
+          pageStore.updateUserName(values.nameProfile);
         } else {
           Alert.alert("Введите имя и фамилию через пробел!");
         }
@@ -102,7 +106,7 @@ const BioForm = ({ phone }) => {
       )}
     </Formik>
   );
-};
+});
 
 const styles = StyleSheet.create({
   nameView: {

@@ -5,13 +5,14 @@ import {
   TextInput,
   TouchableOpacity,
 } from "react-native";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Formik } from "formik";
 import * as Yup from "yup";
 import { useNavigation } from "@react-navigation/native";
 import { SvgXml } from "react-native-svg";
 import { arrow, rememberActive, rememberInactive } from "../../images/images";
 import { useStores } from "../../store/store_context";
+import { observer } from "mobx-react-lite";
 
 const phoneValidationSchema = Yup.object().shape({
   phoneNumber: Yup.string()
@@ -20,7 +21,7 @@ const phoneValidationSchema = Yup.object().shape({
     .max(15, "Номер слишком длинный")
     .required("Введите номер телефона"),
 });
-const RegistrationForm = () => {
+const RegistrationForm = observer(() => {
   const navigation = useNavigation();
   const [state, setState] = useState([false, "+"]);
 
@@ -32,7 +33,8 @@ const RegistrationForm = () => {
       initialValues={{ phoneNumber: "" }}
       validationSchema={phoneValidationSchema}
       onSubmit={(values) => {
-        navigation.navigate("ValidationScreen", values);
+        navigation.navigate("ValidationScreen");
+        pageStore.updatePhoneNumber(values.phoneNumber);
       }}
     >
       {({
@@ -125,7 +127,7 @@ const RegistrationForm = () => {
       )}
     </Formik>
   );
-};
+});
 
 const styles = StyleSheet.create({
   headerText: {

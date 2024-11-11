@@ -180,7 +180,7 @@ const ScannerScreen = ({ route }) => {
               right: 0,
               marginHorizontal: 27,
               paddingVertical: 15,
-              bottom: 170,
+              bottom: 70,
               justifyContent: "center",
               alignItems: "center",
               borderRadius: 8,
@@ -204,7 +204,7 @@ const ScannerScreen = ({ route }) => {
             width: "100%",
             position: "absolute",
             left: 0,
-            bottom: 120,
+            bottom: 20,
             zIndex: 100,
             flexDirection: "row",
             paddingHorizontal: 16,
@@ -237,8 +237,6 @@ const ScannerScreen = ({ route }) => {
             })}
         </ScrollView>
       </ImageBackground>
-
-      {!modalVisible ? <BottomMenu /> : null}
       <Modal visible={modalVisible} animationType="slide" transparent={true}>
         <View
           style={{
@@ -246,7 +244,7 @@ const ScannerScreen = ({ route }) => {
             left: 0,
             bottom: 0,
             width: "100%",
-            height: 300,
+            height: 380,
             padding: 25,
           }}
         >

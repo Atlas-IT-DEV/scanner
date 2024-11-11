@@ -7,6 +7,8 @@ class pageStore {
   registered = false;
   token = null;
   user = {};
+  username = "";
+  phoneNumber = "";
 
   constructor() {
     makeAutoObservable(this);
@@ -81,6 +83,13 @@ class pageStore {
     } else {
       Alert.alert("При загрузке данных пользователя произошла ошибка");
     }
+  };
+
+  updatePhoneNumber = (newPhone) => {
+    this.phoneNumber = newPhone;
+  };
+  updateUserName = (newUserName) => {
+    this.username = newUserName;
   };
 }
 export default pageStore;
