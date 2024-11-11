@@ -1,4 +1,5 @@
 import {
+  ActivityIndicator,
   Image,
   ImageBackground,
   Modal,
@@ -12,10 +13,11 @@ import BottomMenu from "../../components/bottom_menu/bottom_menu";
 import Header from "../../components/header/header";
 import BotMessage from "../../components/messages/bot_message";
 import { SvgXml } from "react-native-svg";
-import { man } from "../../images/images";
+import { acceptIcon, deleteIcon, man } from "../../images/images";
 import { useEffect, useState } from "react";
 import { TouchableOpacity } from "react-native";
 import { useStores } from "../../store/store_context";
+import * as ImagePicker from "expo-image-picker";
 
 const ScannerScreen = ({ route }) => {
   const [products, setProducts] = useState([]);
@@ -50,15 +52,18 @@ const ScannerScreen = ({ route }) => {
   const [rotated, setRotated] = useState(false);
   const [result, setResult] = useState("");
   const [status, setStatus] = useState(0);
-  const [itemId, setItemId] = useState(1);
+  const [item, setItem] = useState("");
 
   const [category, setCategory] = useState("");
+
+  const [productModal, setProductModal] = useState(false);
+  const [orderModal, setOrderModal] = useState(false);
 
   useEffect(() => {
     if (photo) {
       performInference();
     }
-  }, [photo, itemId]);
+  }, [photo, item]);
 
   const openImagePicker = async () => {
     const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
@@ -79,7 +84,6 @@ const ScannerScreen = ({ route }) => {
       setPhoto(result.assets[0].uri);
     }
   };
-
   const performInference = async () => {
     setStatus(1);
     const formData = new FormData();
@@ -88,7 +92,7 @@ const ScannerScreen = ({ route }) => {
       type: "image/jpeg",
       name: "man.jpg",
     });
-    formData.append("product_id", `${itemId}`);
+    formData.append("product_id", `${item.id}`);
 
     try {
       const response = await fetch("https://orion-lab.tech:8010/inference/", {
@@ -106,7 +110,6 @@ const ScannerScreen = ({ route }) => {
       ).toString("base64")}`;
       setResult(base64Image);
       setStatus(2);
-      console.log(base64Image);
     } catch (error) {
       setStatus(3);
       console.error("Ошибка при отправке изображения:", error);
@@ -126,15 +129,75 @@ const ScannerScreen = ({ route }) => {
       >
         <ScrollView style={{ marginTop: 80 }}>
           <View style={{ marginTop: 20 }}>
-            {!modalVisible ? <BotMessage /> : null}
+            {!modalVisible && !photo && !item ? <BotMessage /> : null}
           </View>
-          <SvgXml
-            xml={man}
-            style={styles.man}
-            width={modalVisible ? 120 : 160}
-            height={modalVisible ? 263 : 340}
-          />
+          <TouchableOpacity onPress={openImagePicker}>
+            {photo && !result ? (
+              <Image
+                source={{ uri: photo }}
+                style={styles.man}
+                width={modalVisible ? 120 : 160}
+                height={modalVisible ? 263 : 340}
+              />
+            ) : null}
+            {photo && result & (status == 1) ? (
+              <Image
+                source={{ uri: photo }}
+                style={styles.man}
+                width={modalVisible ? 120 : 160}
+                height={modalVisible ? 263 : 340}
+              />
+            ) : null}
+
+            {!photo && !result ? (
+              <SvgXml
+                xml={man}
+                style={styles.man}
+                width={modalVisible ? 120 : 160}
+                height={modalVisible ? 263 : 340}
+              />
+            ) : null}
+            {photo && status == 2 ? (
+              <Image
+                source={{ uri: result }}
+                style={styles.man}
+                width={modalVisible ? 120 : 160}
+                height={modalVisible ? 263 : 340}
+              />
+            ) : null}
+            {status == 1 ? (
+              <ActivityIndicator size="large" color="rgba(18, 145, 137, 1)" />
+            ) : null}
+          </TouchableOpacity>
         </ScrollView>
+        {item && !modalVisible ? (
+          <TouchableOpacity
+            backgroundColor
+            style={{
+              backgroundColor: "rgba(19, 161, 152, 1)",
+              position: "absolute",
+              left: 0,
+              right: 0,
+              marginHorizontal: 27,
+              paddingVertical: 15,
+              bottom: 170,
+              justifyContent: "center",
+              alignItems: "center",
+              borderRadius: 8,
+            }}
+            onPress={() => setOrderModal(true)}
+          >
+            <Text
+              style={{
+                color: "white",
+                fontFamily: "RalewayBold",
+                fontSize: 12,
+              }}
+            >
+              Оформить заказ
+            </Text>
+          </TouchableOpacity>
+        ) : null}
         <ScrollView
           horizontal
           style={{
@@ -147,29 +210,31 @@ const ScannerScreen = ({ route }) => {
             paddingHorizontal: 16,
           }}
         >
-          {uniqCategories.map((item) => {
-            return (
-              <>
-                {!modalVisible ? (
-                  <TouchableOpacity
-                    style={styles.categoryButton}
-                    onPress={() => {
-                      setCategory(item);
-                      setModalVisible(true);
-                    }}
-                  >
-                    <Text style={styles.categoryText}>
-                      {item == "upperbody"
-                        ? "Верхняя одежда"
-                        : item == "dress"
-                        ? "Платье"
-                        : null}
-                    </Text>
-                  </TouchableOpacity>
-                ) : null}
-              </>
-            );
-          })}
+          {uniqCategories
+            .filter((item) => item != null)
+            .map((item) => {
+              return (
+                <>
+                  {!modalVisible ? (
+                    <TouchableOpacity
+                      style={styles.categoryButton}
+                      onPress={() => {
+                        setCategory(item);
+                        setModalVisible(true);
+                      }}
+                    >
+                      <Text style={styles.categoryText}>
+                        {item == "upperbody"
+                          ? "Верхняя одежда"
+                          : item == "dress"
+                          ? "Платье"
+                          : null}
+                      </Text>
+                    </TouchableOpacity>
+                  ) : null}
+                </>
+              );
+            })}
         </ScrollView>
       </ImageBackground>
 
@@ -222,7 +287,6 @@ const ScannerScreen = ({ route }) => {
               }}
             >
               {filteredCards.map((item, index) => {
-                console.log(index)
                 return (
                   <TouchableOpacity
                     style={{
@@ -230,13 +294,25 @@ const ScannerScreen = ({ route }) => {
                       height: 97,
                       backgroundColor: "white",
                       borderRadius: 7,
+                      justifyContent: "center",
+                      alignItems: "center",
+                    }}
+                    onPress={() => {
+                      setModalVisible(false);
+                      setProductModal(true);
+                      setItem(item);
                     }}
                   >
                     <Image
                       source={{
-                        uri: `https://orion-lab.tech:8010${item.image.url}`,
+                        uri: `https://orion-lab.tech:8010/public${item.image.url}`,
                       }}
-                      style={{ width: 66, height: 66, resizeMode: "cover" }}
+                      style={{
+                        width: 76,
+                        height: 76,
+                        resizeMode: "cover",
+                        borderRadius: 7,
+                      }}
                     />
                   </TouchableOpacity>
                 );
@@ -244,6 +320,148 @@ const ScannerScreen = ({ route }) => {
             </View>
           </ScrollView>
         </View>
+      </Modal>
+      <Modal visible={productModal} animationType="fade" transparent={true}>
+        <View
+          style={{
+            width: "100%",
+            height: "100%",
+            backgroundColor: "rgba(137, 137, 137, 0.9)",
+          }}
+        >
+          <View
+            style={{
+              width: 255,
+              height: 347,
+              backgroundColor: "white",
+              borderRadius: 7,
+              alignSelf: "center",
+              marginVertical: "auto",
+              paddingHorizontal: 17,
+              paddingVertical: 20,
+            }}
+          >
+            <Image
+              source={{
+                uri:
+                  item == ""
+                    ? null
+                    : `https://orion-lab.tech:8010/public${item.image.url}`,
+              }}
+              width={141}
+              height={141}
+              style={{ alignSelf: "center" }}
+            />
+            <Text
+              style={{
+                marginTop: 32,
+                fontSize: 16,
+                fontFamily: "RalewayRegular",
+                color: "black",
+              }}
+            >
+              {item.name}
+            </Text>
+            <Text
+              style={{
+                marginTop: 5,
+                fontFamily: "RalewayMmedium",
+                fontSize: 20,
+                color: "black",
+              }}
+            >
+              {item.price} ₽
+            </Text>
+
+            <TouchableOpacity
+              style={{
+                paddingVertical: 15,
+                backgroundColor: "rgba(18, 145, 137, 1)",
+                marginTop: 20,
+                justifyContent: "center",
+                alignItems: "center",
+                borderRadius: 8,
+              }}
+              onPress={() => {
+                setItem(item);
+                setProductModal(false);
+              }}
+            >
+              <Text
+                style={{
+                  fontFamily: "RalewayBold",
+                  fontSize: 12,
+                  color: "white",
+                }}
+              >
+                Примерить
+              </Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+        <TouchableOpacity
+          style={{ position: "absolute", right: 50, top: 160 }}
+          onPress={() => {
+            setProductModal(false);
+            setModalVisible(true);
+          }}
+        >
+          <SvgXml xml={deleteIcon} />
+        </TouchableOpacity>
+      </Modal>
+      <Modal visible={orderModal} transparent={true} animationType="fade">
+        <View
+          style={{
+            width: "100%",
+            height: "100%",
+            backgroundColor: "rgba(137, 137, 137, 0.9)",
+          }}
+        >
+          <View
+            style={{
+              width: 255,
+              height: 150,
+              backgroundColor: "white",
+              borderRadius: 7,
+              alignSelf: "center",
+              marginVertical: "auto",
+              paddingHorizontal: 17,
+              paddingVertical: 20,
+            }}
+          >
+            <SvgXml xml={acceptIcon} style={{ alignSelf: "center" }} />
+            <Text
+              style={{
+                marginTop: 10,
+                fontFamily: "RalewayBold",
+                fontSize: 16,
+                color: "black",
+                alignSelf: "center",
+              }}
+            >
+              Заказ оформлен!
+            </Text>
+            <Text
+              style={{
+                marginTop: 5,
+                fontSize: 16,
+                fontFamily: "RalewayRegular",
+                color: "black",
+                textAlign: "center",
+              }}
+            >
+              Мы свяжемся с вами для обсуждения деталей заказа.{" "}
+            </Text>
+          </View>
+        </View>
+        <TouchableOpacity
+          style={{ position: "absolute", right: 50, top: 260 }}
+          onPress={() => {
+            setOrderModal(false);
+          }}
+        >
+          <SvgXml xml={deleteIcon} />
+        </TouchableOpacity>
       </Modal>
     </SafeAreaView>
   );

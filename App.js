@@ -12,9 +12,12 @@ import ProfileScreen from "./pages/profile_screen/profile_screen";
 import ScannerScreen from "./pages/scanner_screen/scanner_screen";
 import RootStore from "./store/root_store";
 import { RootStoreContext } from "./store/store_context";
+import { Buffer } from "buffer";
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
+
+global.Buffer = global.Buffer || Buffer;
 
 export default function App() {
   const [fontsLoaded] = useFonts({
