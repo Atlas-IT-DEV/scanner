@@ -1,4 +1,22 @@
 {
   "name": "scanner",
-  "displayName": "scanner"
+  "displayName": "scanner",
+  "extra": {
+    "eas": {
+      "projectId": "829bb256-e659-447e-8f1b-ec3915391c38"
+    }
+  },
+  "expo": {
+    "splash": {
+      "backgroundColor": "#FFFFFF"
+    },
+    "android": {
+      "package": "com.dmitrovich.scanner"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "829bb256-e659-447e-8f1b-ec3915391c38"
+      }
+    }
+  }
 }
