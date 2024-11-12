@@ -20,10 +20,10 @@ const Header = () => {
 const styles = StyleSheet.create({
   container: {
     width: "100%",
-    height: 80,
+    height: 100,
     position: "absolute",
     left: 0,
-    top: 20,
+    top: 0,
     backgroundColor: "white",
     zIndex: 9999,
     flexDirection: "row",
@@ -42,11 +42,13 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 1, height: 1 },
     shadowOpacity: 0.2,
     shadowRadius: 4,
+    marginTop: 20,
   },
   headerText: {
     fontSize: 20,
     color: "black",
     fontFamily: "RalewaySemiBold",
+    marginTop: 20,
   },
 });
 
